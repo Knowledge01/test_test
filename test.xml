@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    </data>
+</openerp>
+
+<field name="name" attrs="{'invisible':[('number', '==', '/')]} "/>
+
+<field name="name" invisible="1" string="等待审批" nolabel="1" widget="many2many_tags"/>
+
+<div>
+<label for="is_owner" string = "是否车主？"/>
+</div>
+
