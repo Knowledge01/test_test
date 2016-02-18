@@ -61,3 +61,29 @@ _defaults = {
         'user_id': lambda obj, cr, uid, context: uid,
         }
 
+def _check_city(self, cr, uid, ids, context=None):
+    for phase in self.read(cr, uid, ids, ['price', 'total'], context=context):
+        if phase['price'] and phase['total'] and phase['price'] > phase['total']:
+            return False
+    return True
+_constraints = [
+    (_check_city, '单价不可大于总价', ['price', 'total']  ),
+]
+
+_sql_constraints = [
+        ('name_uniq', 'unique(name)', u'该描述已存在!'),
+    ]
+
+@api.onchange('place2')
+def _onchange_place2(self, cr, uid, ids, place2,context=None):
+    p = self.pool.get('city.distance').browse(cr, uid, place2)
+    vals = {'name2': p.distance}
+    return {'value': vals}
+
+@api.onchange('price,number')
+def onchange_price(self, cr, uid, ids,price,number, context=None):
+    return {'value':{'total':price*number}}
+
+@api.onchange('name')
+def _username(self):
+    self.username = self._context.get('username', self.env.user.name)
